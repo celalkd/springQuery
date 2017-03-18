@@ -5,8 +5,10 @@
  */
 package com.tez.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Protocol;
 
@@ -14,7 +16,11 @@ import redis.clients.jedis.Protocol;
  *
  * @author celalkd
  */
-public class JedisConfig {
+public class JedisConnectionConfig {
+    
+    final static int TR_DATABASE = 0;
+    final static int ENG_DATABASE = 1;
+    
     @Bean
     public JedisPoolConfig poolConfig() {
         final JedisPoolConfig jedisPoolConfig =  new JedisPoolConfig(); 
@@ -24,12 +30,13 @@ public class JedisConfig {
         
         return jedisPoolConfig;
     }
+    
     @Bean
     public JedisConnectionFactory connectionFactory() {
         final JedisConnectionFactory connectionFactory = new JedisConnectionFactory( poolConfig() );    
         
-        connectionFactory.setHostName( "redis-host" );
-        connectionFactory.setDatabase( Protocol.DEFAULT_DATABASE );
+        connectionFactory.setHostName( "localhost" );
+        connectionFactory.setDatabase(ENG_DATABASE);
         connectionFactory.setPort( Protocol.DEFAULT_PORT );       
         
         return connectionFactory;

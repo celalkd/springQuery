@@ -7,7 +7,6 @@ import java.util.List;
 import org.apache.commons.lang.WordUtils;
 import org.springframework.context.ApplicationContext;//
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;//
-import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.data.mongodb.core.MongoOperations;//
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -23,11 +22,13 @@ public class MongoController {
     
     public MongoController(){
         //via Annotation
-        //this.ctx = new AnnotationConfigApplicationContext(SpringMongoConfig.class);
+        this.ctx = new AnnotationConfigApplicationContext(SpringMongoConfig.class);
+        this.mongoOperation = (MongoOperations) ctx.getBean("mongoTemplate");
         
         //via XML
-        this.ctx = new GenericXmlApplicationContext("SpringConfig.xml");
-        this.mongoOperation = (MongoOperations) ctx.getBean("mongoBean");
+        //this.ctx = new GenericXmlApplicationContext("SpringConfig.xml");
+        //this.mongoOperation = (MongoOperations) ctx.getBean("mongoBean");
+        
     }
     
     @RequestMapping("/find/byTitle")

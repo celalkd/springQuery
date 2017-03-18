@@ -6,19 +6,23 @@ import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
+import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 
 @Configuration
-public class SpringMongoConfig extends AbstractMongoConfiguration {
+public class SpringMongoConfig {
 
-	@Override
-	public String getDatabaseName() {
-		return "moviesDatabase";
+	public @Bean
+	MongoDbFactory mongoDbFactory() throws Exception {
+            return new SimpleMongoDbFactory(new MongoClient(), "moviesDatabase");
 	}
 
-	@Override
-	@Bean
-	public Mongo mongo() throws Exception {
-		return new MongoClient("127.0.0.1");
+	public @Bean
+	MongoTemplate mongoTemplate() throws Exception {
+            MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory());
+            return mongoTemplate;
+
 	}
         
 }
