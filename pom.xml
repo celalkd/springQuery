@@ -76,5 +76,5 @@
             <url>https://repo.spring.io/libs-release</url>
         </pluginRepository>
     </pluginRepositories>
-    <name>springQuery</name>
+    <name>SpringQueryLayer</name>
 </project>

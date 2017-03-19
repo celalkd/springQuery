@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tez.core;
+package com.tez.contoller;
 
 import com.tez.config.SpringRedisConfig;
-import com.tez.core.RedisController.Word;
+import com.tez.contoller.RedisController.Word;
+import com.tez.domain.Movie;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -35,8 +36,10 @@ public class RedisController {
         
     }
     
-    @RequestMapping("redis/freqList")
-    public List<Word> freqList(@RequestParam(value="key", defaultValue = "0", required = true) String key){
+    @RequestMapping("redis/freqterms")
+    public List<Word> freqList(@RequestParam(value="title", defaultValue = "Pulp Fiction", required = true) String title){
+        
+        String key = new Integer(new MongoController().findByTitle(title).id).toString();
         
         List<Word> wordFreqList = new ArrayList<>();
         

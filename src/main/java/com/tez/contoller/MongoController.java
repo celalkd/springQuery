@@ -1,7 +1,7 @@
-package com.tez.core;
+package com.tez.contoller;
 
 import com.tez.config.SpringMongoConfig;
-import com.tez.model.Movie;
+import com.tez.domain.Movie;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.WordUtils;
@@ -106,4 +106,6 @@ public class MongoController {
         return mongoOperation.find(query, Movie.class);
 
     }
+    
+    
 }
