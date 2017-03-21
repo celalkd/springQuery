@@ -1,5 +1,6 @@
 package com.tez.contoller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.tez.config.SpringMongoConfig;
 import com.tez.domain.Movie;
 import java.util.ArrayList;
@@ -30,13 +31,13 @@ public class MongoController {
         //this.mongoOperation = (MongoOperations) ctx.getBean("mongoBean");
         
     }
-    
+   
     @RequestMapping("/find/byTitle")
     public Movie findByTitle(@RequestParam(value="title", defaultValue="Pulp Fiction") String title) {
        
         Query query = new Query();
         title = WordUtils.capitalize(title);
-        query.addCriteria(Criteria.where("title").is(title));
+        query.addCriteria(Criteria.where("title").regex(title));
         Movie movie = mongoOperation.findOne(query, Movie.class);
         
         return movie;
@@ -51,6 +52,7 @@ public class MongoController {
         
         return movie;
     }
+    
     @RequestMapping("/find/byTags")
     public List<Movie> findByTags(@RequestParam(value="director", required=false) String director,  
                                     @RequestParam(value="yearMin", required=false) Integer yearMin,

@@ -36,20 +36,20 @@ public class Movie {
         this.genre = genre;
     }
 
-    @Override
-    public String toString() {
-        return "Movie{" + 
-                "id=" + id + 
-                ", title=" + title + 
-                ", director=" + director + 
-                ", year=" + year + 
-                ", rating=" + rating + 
-                ", wikiURL=" + wikiURL + 
-                ", vikiURL=" + vikiURL + 
-                ", starring=" + starring + 
-                ", genre=" + genre + '}' +
-                "\n";
-    }
+//    @Override
+//    public String toString() {
+//        return "Movie{" + 
+//                "id=" + id + 
+//                ", title=" + title + 
+//                ", director=" + director + 
+//                ", year=" + year + 
+//                ", rating=" + rating + 
+//                ", wikiURL=" + wikiURL + 
+//                ", vikiURL=" + vikiURL + 
+//                ", starring=" + starring + 
+//                ", genre=" + genre + '}' +
+//                "\n";
+//    }
     
     
     
