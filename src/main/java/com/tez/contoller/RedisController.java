@@ -38,8 +38,11 @@ public class RedisController {
     
     @RequestMapping("redis/freqterms")
     public List<Word> freqList(@RequestParam(value="title", defaultValue = "Pulp Fiction", required = true) String title){
+        MongoController mongoController = new MongoController();
         
-        String key = new Integer(new MongoController().findByTitle(title).id).toString();
+        Movie movie = mongoController.findByTitle(title);
+        Integer movieID = new Integer(movie.id);
+        String key = movieID.toString();
         
         List<Word> wordFreqList = new ArrayList<>();
         
