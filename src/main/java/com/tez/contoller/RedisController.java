@@ -36,7 +36,7 @@ public class RedisController {
         
     }
     
-    @RequestMapping("redis/freqterms")
+    @RequestMapping("find/tags")
     public List<Word> freqList(@RequestParam(value="title", defaultValue = "Pulp Fiction", required = true) String title){
         MongoController mongoController = new MongoController();
         
@@ -56,8 +56,11 @@ public class RedisController {
         
         return wordFreqList;
     }
+    
     @RequestMapping("find/byKeywords")
-    public List<String> findByKeywords(@RequestParam(value="keywords", required=true) List<String> keywordList){
+    public List<Movie> findByKeywords(@RequestParam(value="keywords", required=true) List<String> keywordList){
+        
+        ArrayList<Movie> movies = new ArrayList<>();
         
         Set<String> keySet = redisTemplate.keys("*");
         ArrayList<String> keyList = new ArrayList<>();
@@ -68,7 +71,7 @@ public class RedisController {
             for(String key : keyList){//key listesinde keylere bakılır
                 
                 if(key!=null){//key null ise bu key elenmiş demektir
-                    List<Word> wordFreqList = this.freqList(key);//null olmayan keylerin value'ları alınır
+                    List<Word> wordFreqList = this.freqList_by_id(key);//null olmayan keylerin value'ları alınır
                     
                     if(!this.contains(wordFreqList, keyword)){//aranan anahtar kelime bu value'larda yoksa
                         int index = keyList.indexOf(key);
@@ -84,7 +87,29 @@ public class RedisController {
             if(key==null)
                 iterator.remove();
         }
-        return keyList;        
+        
+        for(String idStr : keyList){
+            Integer idInt = Integer.parseInt(idStr);
+            Movie m = new MongoController().findById(idInt);
+            movies.add(m);
+        }
+        
+        return movies;        
+    }
+    
+    public List<Word> freqList_by_id(String key){
+        
+        List<Word> wordFreqList = new ArrayList<>();
+        
+        int rowSize = getLastIndex(redisTemplate, key);
+        
+        for(int row=0; row<rowSize; row++){
+            String data = redisTemplate.opsForList().index(key, row);
+            Word word = splitData(data);
+            wordFreqList.add(word);
+        }
+        
+        return wordFreqList;
     }
     
     public boolean contains(List<Word> wordFreqList, String input){

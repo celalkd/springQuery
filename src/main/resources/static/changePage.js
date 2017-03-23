@@ -5,3 +5,4 @@ function newPage() {
 function previousPage() {
     window.location.href = "index(neo4j).html";   
 }
+

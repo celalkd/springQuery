@@ -23,8 +23,11 @@ public class Movie {
     public double rating;    
     public String wikiURL;
     public String vikiURL; 
+    public String poster;
+    public String plot;
 
-    public Movie(int id, String title, String director, int year, double rating, String wikiURL, String vikiURL, ArrayList<String> starring, ArrayList<String> genre) {
+    public Movie(int id, String title, String director, int year, double rating, String wikiURL, String vikiURL,
+                    ArrayList<String> starring, ArrayList<String> genre, String poster, String plot) {
         this.id = id;
         this.title = title;
         this.director = director;
@@ -34,23 +37,8 @@ public class Movie {
         this.vikiURL = vikiURL;
         this.starring = starring;
         this.genre = genre;
+        this.poster = poster;
+        this.plot = plot;
     }
-
-//    @Override
-//    public String toString() {
-//        return "Movie{" + 
-//                "id=" + id + 
-//                ", title=" + title + 
-//                ", director=" + director + 
-//                ", year=" + year + 
-//                ", rating=" + rating + 
-//                ", wikiURL=" + wikiURL + 
-//                ", vikiURL=" + vikiURL + 
-//                ", starring=" + starring + 
-//                ", genre=" + genre + '}' +
-//                "\n";
-//    }
-    
-    
     
 }
