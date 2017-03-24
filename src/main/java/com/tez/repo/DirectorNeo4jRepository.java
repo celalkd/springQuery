@@ -5,7 +5,7 @@
  */
 package com.tez.repo;
 
-import com.tez.domain.MovieNeo4jNode;
+import com.tez.domain.DirectorNeo4jNode;
 import org.springframework.data.neo4j.repository.GraphRepository;
 
 /**
@@ -13,11 +13,7 @@ import org.springframework.data.neo4j.repository.GraphRepository;
  * @author celalkd
  */
 
-public interface MovieNeo4jRepository extends GraphRepository<MovieNeo4jNode>{
+public interface DirectorNeo4jRepository extends GraphRepository<DirectorNeo4jNode>{
     
-    MovieNeo4jNode findByTitle(String title);
-    MovieNeo4jNode findByMovieId(String movieId);
-    
-    
-    
+    DirectorNeo4jNode findByName(String name);
 }

@@ -5,9 +5,13 @@
  */
 package com.tez.controller;
 
+import com.tez.domain.DirectorNeo4jNode;
 import com.tez.service.MovieNeo4jService;
 import com.tez.domain.MovieNeo4jNode;
+import com.tez.service.DirectorNeo4jService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,18 +23,14 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-public class MovieNeo4jController {
+public class DirectorNeo4jController {
     
-    @Autowired MovieNeo4jService movieNeo4jService;
+    @Autowired DirectorNeo4jService directorService;
     
     
-    @RequestMapping(value="/neo4j/byTitle/{title}", method = RequestMethod.GET)
-    public MovieNeo4jNode getMovieNodeByTitle(@PathVariable("title") String title){
-        return  movieNeo4jService.getByTitle(title);
-    }
-    @RequestMapping(value="/neo4j/byMovieId/{movieId}", method = RequestMethod.GET)
-    public MovieNeo4jNode getMovieNodeByMovieId(@PathVariable("movieId") String movieId){
-        return  movieNeo4jService.getByMovieId(movieId);
+    @RequestMapping(value="/director/byName/{name}", method = RequestMethod.GET)
+    public DirectorNeo4jNode getDirectorByName(@PathVariable("name") String name){
+        return  directorService.getByName(name);
     }
     
     
