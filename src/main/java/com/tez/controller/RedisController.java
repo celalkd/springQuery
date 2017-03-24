@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tez.contoller;
+package com.tez.controller;
 
 import com.tez.config.SpringRedisConfig;
-import com.tez.contoller.RedisController.Word;
-import com.tez.domain.Movie;
+import com.tez.controller.RedisController.Word;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import com.tez.domain.Movie;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;

@@ -1,10 +1,10 @@
-package com.tez.contoller;
+package com.tez.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.tez.config.SpringMongoConfig;
-import com.tez.domain.Movie;
 import java.util.ArrayList;
 import java.util.List;
+import com.tez.domain.Movie;
 import org.apache.commons.lang.WordUtils;
 import org.springframework.context.ApplicationContext;//
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;//
