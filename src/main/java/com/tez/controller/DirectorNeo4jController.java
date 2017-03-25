@@ -5,9 +5,9 @@
  */
 package com.tez.controller;
 
-import com.tez.domain.DirectorNeo4jNode;
+import com.tez.domain.neo4j.node.DirectorNeo4jNode;
 import com.tez.service.MovieNeo4jService;
-import com.tez.domain.MovieNeo4jNode;
+import com.tez.domain.neo4j.node.MovieNeo4jNode;
 import com.tez.service.DirectorNeo4jService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

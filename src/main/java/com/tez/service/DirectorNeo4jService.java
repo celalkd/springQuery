@@ -5,7 +5,7 @@
  */
 package com.tez.service;
 
-import com.tez.domain.DirectorNeo4jNode;
+import com.tez.domain.neo4j.node.DirectorNeo4jNode;
 import com.tez.repo.DirectorNeo4jRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

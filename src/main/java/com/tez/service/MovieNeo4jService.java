@@ -5,8 +5,13 @@
  */
 package com.tez.service;
 
-import com.tez.domain.MovieNeo4jNode;
+import com.tez.domain.neo4j.rel.ActedRelEntity;
+import com.tez.domain.neo4j.rel.DirectedRelEntity;
+import com.tez.domain.neo4j.node.DirectorNeo4jNode;
+import com.tez.domain.neo4j.rel.GenredRelEntity;
+import com.tez.domain.neo4j.node.MovieNeo4jNode;
 import com.tez.repo.MovieNeo4jRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,5 +33,14 @@ public class MovieNeo4jService {
         return movieRepo.findByMovieId(movieId);
     }
     
+    public List<DirectedRelEntity> getDirectorOfMovie(MovieNeo4jNode movie){
+        return movieRepo.getDirector(movie);
+    }
+    public List<ActedRelEntity> getCastOfMovie(MovieNeo4jNode movie){
+        return movieRepo.getStar(movie);
+    }
+    public List<GenredRelEntity> getGenreOfMovie(MovieNeo4jNode movie){
+        return movieRepo.getGenre(movie);
+    }
     
 }

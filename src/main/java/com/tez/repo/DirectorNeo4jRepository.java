@@ -5,7 +5,7 @@
  */
 package com.tez.repo;
 
-import com.tez.domain.DirectorNeo4jNode;
+import com.tez.domain.neo4j.node.DirectorNeo4jNode;
 import org.springframework.data.neo4j.repository.GraphRepository;
 
 /**
