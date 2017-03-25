@@ -1,8 +1,8 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="http://neo4j-contrib.github.io/developer-resources/language-guides/assets/css/main.css">
-        <link rel="icon" href="http://imgh.us/lens_1.png">
+        <link rel="stylesheet" href="/main.css">
+        <link rel="icon" href="/img/lens.png">
 <!--        <link rel="icon" href="http://imgh.us/1490148847_filmreel.png">-->
 
         <title>WikiMining</title>
@@ -19,7 +19,7 @@
                             <li>
                                 <form role="search" class="navbar-form" id="search">
                                     <div class="form-group">
-                                        <input size="130" id="question" type="text" value='Who is the director of "Pulp Fiction", what is the rating and publish year of the movie? Also please give the genre list, plot and tags.' placeholder="Search for Movie Title" class="form-control" name="search">
+                                        <input size="130" id="question" type="text" value='Who is the director of "The Godfather", what is the rating and publish year of the movie? Also please give the genre list, plot and tags.' placeholder="Search for Movie Title" class="form-control" name="search">
                                         
                                     </div>
                                     <button type="button" onclick="searchTags()">Ask</button>
@@ -31,7 +31,7 @@
                     <div class="navbar-header col-sm-3 col-md-3">
                         <div class="logo-well">
                             <a>
-                                <img src="http://imgh.us/lens_1.svg" alt="WikiMining on Cinema Ontology" id="logo">
+                                <img src="/img/lens.svg" alt="WikiMining on Cinema Ontology" id="logo">
                             </a>
                         </div>
                             <div class="navbar-brand">
@@ -44,7 +44,12 @@
         <div class="row">
             <div id="plot_res" class="col-md-6">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Search Results</div>
+                    <div class="logo-well">
+                            <a>
+                                <img src="img/mongodb.svg">
+                            </a>
+                    </div>
+                    <div class="panel-heading">&nbsp;Search Results</div>
                     <table id="results" class="table table-striped table-hover">
                         <thead>
                         <tr>
@@ -58,20 +63,32 @@
                 <br>
                 <br>
                 <div class="panel panel-default">
-                    <div class="panel-heading">Plot</div>
+                    <div class="logo-well">
+                            <a>
+                                <img src="img/mongodb.svg">
+                            </a>
+                    </div>
+                    <div class="panel-heading">&nbsp;Plot</div>
                     <table id="plot" class="table table-striped table-hover">                        
-                        <tbody>
+                        
+                            <tbody>
 
-                        </tbody>
+                            </tbody>
+                        
                     </table>
                 </div>
                 
             </div>
             <div class="col-md-6">
                 <div class="panel panel-default">
-                    <div class="panel-heading" id="title">Details</div>
+                    <div class="logo-well">
+                            <a>
+                                <img src="img/neo4j.svg">
+                            </a>
+                    </div>
+                    <div class="panel-heading" id="title">&nbsp;Details</div>
                     <div class="row">
-                        <div class="col-sm-6 col-md-6">
+                        <div class="col-sm-6 col-md-6"  >
                             <img src="" class="well" id="poster"/>
                         </div>
                         <div class="col-md-6 col-sm-6">
@@ -84,7 +101,12 @@
                 <br>
                 <br>
                 <div class="panel panel-default">
-                    <div class="panel-heading">Frequent Terms</div>
+                    <div class="logo-well">
+                            <a>
+                                <img src="img/redis.svg">
+                            </a>
+                    </div>
+                    <div class="panel-heading">&nbsp;Frequent Terms</div>
                     <table id="tags" class="table table-striped table-hover">
                         <thead>
                             <tr>
@@ -106,7 +128,7 @@
             .link { stroke: #999; stroke-opacity: .6; stroke-width: 1px; }
             
             body {
-                background-image: url('../img/director.jpg');
+                background-image: url('../img/sphere.png');
                 background-size:     cover;                     
                 background-repeat:   no-repeat;
                 background-position: center center; 
