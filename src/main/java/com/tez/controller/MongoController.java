@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.tez.config.SpringMongoConfig;
 import java.util.ArrayList;
 import java.util.List;
-import com.tez.domain.Movie;
+import com.tez.domain.MovieMongoDB;
 import org.apache.commons.lang.WordUtils;
 import org.springframework.context.ApplicationContext;//
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;//
@@ -33,28 +33,28 @@ public class MongoController {
     }
    
     @RequestMapping("/find/byTitle")
-    public Movie findByTitle(@RequestParam(value="title", defaultValue="Pulp Fiction") String title) {
+    public MovieMongoDB findByTitle(@RequestParam(value="title", defaultValue="Pulp Fiction") String title) {
        
         Query query = new Query();
         title = WordUtils.capitalize(title);
         query.addCriteria(Criteria.where("title").regex(title));
-        Movie movie = mongoOperation.findOne(query, Movie.class);
+        MovieMongoDB movie = mongoOperation.findOne(query, MovieMongoDB.class);
         
         return movie;
     }
     @RequestMapping("/find/byId")
-    public Movie findById(@RequestParam(value="id", defaultValue="0") int id) {
+    public MovieMongoDB findById(@RequestParam(value="id", defaultValue="0") int id) {
        
         Query query = new Query();
         
         query.addCriteria(Criteria.where("_id").is(id));
-        Movie movie = mongoOperation.findOne(query, Movie.class);
+        MovieMongoDB movie = mongoOperation.findOne(query, MovieMongoDB.class);
         
         return movie;
     }
     
     @RequestMapping("/find/byTags")
-    public List<Movie> findByTags(@RequestParam(value="director", required=false) String director,  
+    public List<MovieMongoDB> findByTags(@RequestParam(value="director", required=false) String director,  
                                     @RequestParam(value="yearMin", required=false) Integer yearMin,
                                     @RequestParam(value="rating", required=false) Double rating,
                                     @RequestParam(value="yearMax", required=false) Integer yearMax,
@@ -105,7 +105,7 @@ public class MongoController {
         
         Query query = new Query().addCriteria(criteria);
         System.out.println(query.toString());
-        return mongoOperation.find(query, Movie.class);
+        return mongoOperation.find(query, MovieMongoDB.class);
 
     }
     

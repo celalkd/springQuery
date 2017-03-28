@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import com.tez.domain.Movie;
+import com.tez.domain.MovieMongoDB;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -40,7 +40,7 @@ public class RedisController {
     public List<Word> freqList(@RequestParam(value="title", defaultValue = "Pulp Fiction", required = true) String title){
         MongoController mongoController = new MongoController();
         
-        Movie movie = mongoController.findByTitle(title);
+        MovieMongoDB movie = mongoController.findByTitle(title);
         Integer movieID = new Integer(movie.id);
         String key = movieID.toString();
         
@@ -58,17 +58,42 @@ public class RedisController {
     }
     
     @RequestMapping("find/byKeywords")
-    public List<Movie> findByKeywords(@RequestParam(value="keywords", required=true) List<String> keywordList){
+    public List<MovieMongoDB> findByKeywords(@RequestParam(value="keywords", required=true) List<String> keywordList){
         
-        ArrayList<Movie> movies = new ArrayList<>();
+        ArrayList<MovieMongoDB> movies = new ArrayList<>();
         
         Set<String> keySet = redisTemplate.keys("*");
         ArrayList<String> keyList = new ArrayList<>();
         keyList.addAll(keySet);
         
+        List<String> stopWords= new ArrayList<>();
+        stopWords.add("a");
+        stopWords.add("an");
+        stopWords.add("the");
+        stopWords.add("movie");
+        stopWords.add("which");
+        stopWords.add("where");
+        stopWords.add("when");
+        stopWords.add("played");
+        stopWords.add("plays");
+        stopWords.add("as");
+        stopWords.add("with");
+        stopWords.add("is");
+        stopWords.add("are");
+        stopWords.add("he");
+        stopWords.add("she");
+        stopWords.add("was");
+        stopWords.add("were");
+        stopWords.add("and");
+        stopWords.add("or");
+        stopWords.add("with");
+        stopWords.add("character");
+        stopWords.add("about");
+        
         for(String keyword : keywordList){//her bir arama yapılan anahtar kelime için
             
-            for(String key : keyList){//key listesinde keylere bakılır
+            if(!stopWords.contains(keyword)){
+                for(String key : keyList){//key listesinde keylere bakılır
                 
                 if(key!=null){//key null ise bu key elenmiş demektir
                     List<Word> wordFreqList = this.freqList_by_id(key);//null olmayan keylerin value'ları alınır
@@ -78,6 +103,7 @@ public class RedisController {
                         keyList.set(index, null);//key null yapılır
                     }
                 }
+            }
             }
         }
         
@@ -90,7 +116,7 @@ public class RedisController {
         
         for(String idStr : keyList){
             Integer idInt = Integer.parseInt(idStr);
-            Movie m = new MongoController().findById(idInt);
+            MovieMongoDB m = new MongoController().findById(idInt);
             movies.add(m);
         }
         
@@ -124,7 +150,6 @@ public class RedisController {
         
         Long l = redisTemplate.opsForList().size(key);
         Integer i = l.intValue();
-        System.out.println(l.toString());
         return i;
     }
     
