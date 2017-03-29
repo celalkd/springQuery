@@ -1,11 +1,14 @@
-        var isDirector=false;
-        var isRating=false;
-        var isYear=false;
-        var isGenre=false;
-        var isStarring=false;
-        var isFreqTerms=false;    
-        var isAll=false;
-        var isPlot=false;
+    var isDirector = false;
+    var isRating = false;
+    var isYear = false;
+    var isGenre = false;
+    var isStarring = false;
+    var isFreqTerms = false;
+    var isAll = false;
+    var isPlot = false;
+    var isRedis = false;
+    var isRecommendation = false;
+        
     function refreshData(){
         isDirector=false;
         isRating=false;
@@ -15,8 +18,13 @@
         isFreqTerms=false;    
         isAll=false;
         isPlot=false;
+        isRedis = false;
+        isRecommendation = false;
+        cleanHtmlElements();
+    }
+    function cleanHtmlElements(){
         
-        $("table#results tbody").empty();
+        $("table#results tbody").remove();
         $("table#results thead").empty();
         $("table#tags tbody").empty();
         $("table#tags thead").empty();
@@ -26,51 +34,47 @@
     }
         
     function anyQuery(){
+        
         refreshData();
         
         var input = $("#question").val();
-        debugger;
-        if(input[0]==='\"')
-            searchRedis();
-        
-        else
+        if(input[0]==='\"'){
+            searchRedisKeywords();   
+            isRedis = true;
+            $('#plot_res').removeClass('col-md-6').addClass('col-md-12');
+        }
+        else{
             searchTags();
+            $('#plot_res').removeClass('col-md-12').addClass('col-md-6');
+        }
     }
-    function searchRedis(){
+    function searchRedisKeywords(){
+        
+        
         
         var input = $("#question").val();
          
         var description = input.match(/"([^"]+)"/)[1];
-        debugger;
         var list = description.split(/[\s]+/); 
-        debugger;
+        var url_firstRedisFunc="http://localhost:8080/find/byKeywords?keywords="+list;
         
-        var urlAppend="";
+        append_all_th();
+        $.ajax({
+                type: "GET",
+                url: url_firstRedisFunc,
+                success: function (data) {
 
-         var url_firstRedisFunc="http://localhost:8080/find/byKeywords?keywords="+list;
-
-                $.ajax({type:"GET",
-                        url: url_firstRedisFunc,
-                        success:function(data){
-                            
-                              var x=0;
-                              append_tr_element();
-                              while(data[x]){
-                                appendTitleandPoster(data[x]);
-                                appendDirector(data[x]);
-                                appendYear(data[x]);
-                                appendGenre(data[x]);
-                                appendStarring(data[x]);
-                                appendRating(data[x]);
-                                x++;
-                              }
-                          }
-                      });
+                    var x = 0;
+                    while (data[x]) {
+                        append_all_body(data[x],x);
+                        x++;
+                    }
+                }
+            });
     }
+    
     function searchTags() {
     
-        refreshData();
-        
         var input = $("#question").val();
         var list = input.split(/[\s|?|,|.]+/);  
         var titleForUrl = input.match(/"([^"]+)"/)[1];
@@ -95,6 +99,10 @@
                 isFreqTerms = true;
             if(list[i]==='plot')
                 isPlot= true;
+            if(list[i]==='recommendation'){
+                isRecommendation= true;
+                debugger;
+            }
         }
         
         
@@ -138,24 +146,58 @@
                     }
                 });
     }
-    function appendTitleandPoster(movie){
+    function append_all_th(){
         var t = $("table#results thead");
         $("<th>Title</th>").appendTo(t);
-
-        var tr = $("table#results tbody tr");
-        $("<td class='movie'>"+movie.title+"</td>").appendTo(tr);
+        $("<th>Director</th>").appendTo(t);
+        $("<th>Year</th>").appendTo(t);
+        $("<th>Genre</th>").appendTo(t);
+        $("<th>Starring</th>").appendTo(t);
+        $("<th>Rating</th>").appendTo(t);
+        debugger;
+    }
+    function append_all_body(movie, index){
         
-        var poster_src = movie.poster;
-        $("#poster").attr("src",poster_src);
+        
+        var element_id = "body"+index;
+        var table = $("table#results");
+        $('<tbody id="'+element_id+'"> </tbody>').appendTo(table);
+        
+        var t_body = $("#"+element_id);
+        
+        element_id="tr"+index;
+        $('<tr id="'+element_id+'"> </tr>').appendTo(t_body);
+        debugger;
+       
+        
+        var tr = $("#"+element_id);
+        
+        $("<td class='movie' id='title_"+index+"'>"+movie.title+"</td>").appendTo(tr);
+        $("#title_"+index).css("font-weight", "bold");
+        
+        $("<td class='director'>"+movie.director+"</td>").appendTo(tr);
+        $("<td class='year'>"+movie.year+"</td>").appendTo(tr);
+        
+        
+        element_id="tdGenre"+index;
+        $("<td id='"+element_id+"'</td>").appendTo(tr);
+            var genreList = movie.genre;
+            var tdGenre = $("#"+element_id);
+            genreList.forEach(function (genre) {$("<li>" + genre + "</li>").appendTo(tdGenre);});
+            
+        element_id="tdStar"+index;
+        $("<td id='"+element_id+"'</td>").appendTo(tr);
+            var starList = movie.starring;
+            var tdStar = $("#"+element_id);
+            starList.forEach(function (genre) {$("<li>" + genre + "</li>").appendTo(tdStar);});
+            
+        $("<td id='rating'>"+movie.rating+"</td>").appendTo(tr);
     }
     
-    
-    
-    
-    
     function append_tr_element(){
-        var t_body = $("table#results tbody").empty();
-        var t_head = $("table#results thead").empty();
+        var table = $("table#results");
+        $('<tbody id="resBody"> </tbody>').appendTo(table);
+        var t_body = $("table#results tbody#resBody");
         $('<tr> </tr>').appendTo(t_body);
     }
     function appendTitleandPoster(movie){
@@ -251,31 +293,7 @@
         debugger;
         
     }
-    
-
-    $(document).on({
-        ajaxStart: function() { 
-                        $("#mongoTagsPanel").hide(0);
-                        $("#mongoPlotPanel").hide(0);
-                        $("#neo4jPanel").hide(0);
-                        $("#redisPanel").hide(0);
-        },
-        ajaxStop: function() {
-          setTimeout(function() { 
-                        $("#mongoTagsPanel").fadeIn(1500);
-                        $("#neo4jPanel").fadeIn(1500);
-                        if(isPlot)
-                            $("#mongoPlotPanel").fadeIn(1500);                        
-                        if(isFreqTerms)
-                            $("#redisPanel").fadeIn(1500);
-                        //if(isRating)
-                            addDonutChart();
-                        
-                      }, 100);
-        }    
-    });
-    
-    function addDonutChart(){
+    function appendDonutChart(id){
             
             
             var rating = $("#rating").text();
@@ -289,9 +307,9 @@
             }
             
         
-            $("#doughnutChart").drawDoughnutChart([
+            $("#"+id).drawDoughnutChart([
                     { 
-                      title: "Missing", 
+                      title: "Broken", 
                       value : negative,  
                       color: "#1A1C1E" 
                       
@@ -304,3 +322,56 @@
                   ]);
    
     }
+
+    $(document).on({
+        ajaxStart: function() { 
+                        $("#mongoTagsPanel").hide(0);
+                        $("#mongoPlotPanel").hide(0);
+                        $("#mongoDetailsPanel").hide(0);
+                        $("#redisPanel").hide(0);
+                        $("#neo4jPanel").hide(0);
+        }
+        ,
+        ajaxStop: function() {
+          setTimeout(function() { 
+                        if(isAll){
+                            $("#mongoTagsPanel").fadeIn(1500);
+                            $("#mongoDetailsPanel").fadeIn(1500);
+                            $("#mongoPlotPanel").fadeIn(1500); 
+                            $("#redisPanel").fadeIn(1500);
+                            $("#neo4jPanel").fadeIn(1500);
+                            appendDonutChart("doughnutChart");
+                            
+                        }
+                        else{
+                            $("#mongoTagsPanel").fadeIn(1500);
+                            if(isRecommendation)
+                                $("#neo4jPanel").fadeIn(1500);
+                            if(!isRedis)
+                                $("#mongoDetailsPanel").fadeIn(1500);
+                            if(isPlot)
+                                $("#mongoPlotPanel").fadeIn(1500);                        
+                            if(isFreqTerms)
+                                $("#redisPanel").fadeIn(1500);
+                            appendDonutChart("doughnutChart");
+                        }
+                        
+                      }, 100);
+        }    
+    });
+    
+    
+//    function append_tr_element(){
+//        var t_body = $("table#results tbody#resBody").empty();
+//        $('<tr> </tr>').appendTo(t_body);
+//    }
+//    function appendTitleandPoster(movie){
+//        var t = $("table#results thead");
+//        $("<th>Title</th>").appendTo(t);
+//
+//        var tr = $("table#results tbody tr");
+//        $("<td class='movie'>"+movie.title+"</td>").appendTo(tr);
+//        
+//        var poster_src = movie.poster;
+//        $("#poster").attr("src",poster_src);
+//    }

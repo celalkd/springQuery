@@ -71,8 +71,10 @@ public class MovieNeo4jService {
 		Iterator<MovieNeo4jNode> result = movies.iterator();
 		while (result.hasNext()) {
 			MovieNeo4jNode movie = result.next();
-                        System.out.println(movie.getTitle()+"\n");
+//                        Map<String, Object> m = map("title", movie.getTitle(), "label", "Movie");
+//                        System.out.println(m.toString());
 			nodes.add(map("title", movie.getTitle(), "label", "Movie"));
+                        
 			int target = i;
 			i++;
 			for (DirectedRelEntity director : movieRepo.getDirector(movie)) {
@@ -82,17 +84,17 @@ public class MovieNeo4jService {
 					nodes.add(dMap);
 					source = i++;
 				}
-				rels.add(map("director", source, "target", target));
+				rels.add(map("source", source, "target", target));
 			}
                         for (ActedRelEntity actor : movieRepo.getCast(movie)) {
 				Map<String, Object> sMap = map("name", actor.getStar().getName(), "label", "Star");
-                                System.out.println(actor.getStar().getName()+"\n");
+                               
 				int source = nodes.indexOf(sMap);
 				if (source == -1) {
 					nodes.add(sMap);
 					source = i++;
 				}
-				rels.add(map("star", source, "target", target));
+				rels.add(map("source", source, "target", target));
 			}
                         for (GenredRelEntity genre : movieRepo.getGenre(movie)) {
 				Map<String, Object> gMap = map("name", genre.getGenre().getName(), "label", "Genre");
@@ -101,9 +103,11 @@ public class MovieNeo4jService {
 					nodes.add(gMap);
 					source = i++;
 				}
-				rels.add(map("genre", source, "target", target));
+				rels.add(map("source", source, "target", target));
 			}
+                        
 		}
+                
 		return map("nodes", nodes, "links", rels);
 	}
 

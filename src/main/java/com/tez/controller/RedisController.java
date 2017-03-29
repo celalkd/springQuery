@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import com.tez.domain.MovieMongoDB;
+import org.apache.commons.lang.WordUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -86,17 +87,22 @@ public class RedisController {
         stopWords.add("were");
         stopWords.add("and");
         stopWords.add("or");
+        stopWords.add("or");
         stopWords.add("with");
         stopWords.add("character");
         stopWords.add("about");
+        stopWords.add("that");
+        stopWords.add("of");
+        stopWords.add("by");
         
         for(String keyword : keywordList){//her bir arama yapılan anahtar kelime için
             
             if(!stopWords.contains(keyword)){
+                keyword = WordUtils.uncapitalize(keyword);
                 for(String key : keyList){//key listesinde keylere bakılır
                 
-                if(key!=null){//key null ise bu key elenmiş demektir
-                    List<Word> wordFreqList = this.freqList_by_id(key);//null olmayan keylerin value'ları alınır
+                if(key!=null){//key null değil ise
+                    List<Word> wordFreqList = this.freqList_by_id(key);//value'lara bakılır
                     
                     if(!this.contains(wordFreqList, keyword)){//aranan anahtar kelime bu value'larda yoksa
                         int index = keyList.indexOf(key);

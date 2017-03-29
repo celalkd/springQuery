@@ -10,36 +10,14 @@
 
 
     <body>
-        <div id="graph">
-        </div>
-<!--        <div role="navigation" class="navbar navbar-default navbar-fixed-top" >
-            <input  
-                id="question"
-                type="search"
-                style= "color:#ffffff;
-                        border-color:#1A1C1E;
-                        background-color: #1A1C1E;
-                        opacity: 0.75;
-                        filter: alpha(opacity=75);
-                        width: 70%;
-                        box-sizing: border-box;
-                        margin-top : 0.5%;
-                        margin-bottom : -0.5%;"
-                value='Who is the director of "The Godfather Part II", what is the rating, genre and publish year of the movie? Also please give the cast, plot and tags.'
-                placeholder="Search for Movie Title"
-                class="form-control"
-                name="search"
-            >
-            <button type="button" onclick="searchTags()" style="position: relative;">Submit</button>
-        </div>-->
+        <div id="graph"></div>
+
         <div role="navigation" class="navbar navbar-default navbar-static-top" >
                     
                     <div class="col-sm-md-9 col-md-9">
                         <ul class="nav navbar-nav">
                             <li>
-<!--                                <form role="search" class="navbar-form" id="search" style="position: relative;padding: 0px;">-->
-<!--                                    <div class="form-group" style="position: relative;padding: 0px;">-->
-                                            <button type="button" onclick="anyQuery()"
+                                <button type="button" onclick="anyQuery()"
                                                     style="float: right; margin-top: 1%">Submit</button>
                                             <div style="overflow: hidden; "> 
                                                 <input  
@@ -59,9 +37,6 @@
                                                     name="search"
                                                  />
                                             </div>
-<!--                                    </div>-->
-                                    
-<!--                                </form>-->
                             </li>
                         </ul>
                     </div>
@@ -80,7 +55,7 @@
                     </div>
                 
         </div>
-
+         
         <div class="row">
             <div id="plot_res" class="col-md-6">
                 <div class="panel panel-default" id="mongoTagsPanel" style = "display:none">
@@ -96,8 +71,6 @@
                             
                         </tr>
                         </thead>
-                        <tbody>
-                        </tbody>
                     </table>
                 </div>
                 <br>
@@ -118,16 +91,17 @@
                     </table>
                 </div>
                 
+                
             </div>
             <div class="col-md-6">
-                <div class="panel panel-default" id="neo4jPanel" style = "display:none">
+                <div class="panel panel-default" id="mongoDetailsPanel" style = "display:none">
                     <div class="logo-well">
                             <a>
-                                <img src="img/neo4j.svg">
+                                <img src="img/mongodb.svg">
                             </a>
                     </div>
-                    <div class="panel-heading" id="title">&nbsp;Details</div>
-                    <div class="row">
+                    <div class="panel-heading" id="detailsPanel">&nbsp;Details</div>
+                    <div class="row" id="detailsRow">
                         
                         <div class="col-md-6 col-sm-6">
                             <div id="doughnutChart" class="chart"></div>
@@ -135,11 +109,6 @@
                         <div class="col-sm-6 col-md-6"   >
                             <img src="" class="well" id="poster" style="display: block;margin-left: auto; margin-right: auto" />
                         </div>
-<!--                    <div class="col-md-6 col-sm-6">
-                            <h4>Graph</h4>
-                            <ul id="neo4jGraph">
-                            </ul>
-                        </div>-->
                     </div>
                 </div>
                 <br>
@@ -164,7 +133,22 @@
                 </div>
             </div>
         </div>
-        
+        <div class="row">
+            <div class="col-md-12">
+                
+                <div class="panel panel-default" id="neo4jPanel" style="display:none" >
+                    <div class="logo-well">
+                            <a>
+                                <img src="img/neo4j.svg">
+                            </a>
+                    </div>
+                    <div class="panel-heading">&nbsp;Recommendations</div>
+                    <div style="height:500px">
+                            
+                    </div>
+                </div>
+            </div>
+        </div>
         <style type="text/css">
             .node { stroke: #222; stroke-width: 1.5px; }
             .node.actor { fill: #888; }
@@ -180,10 +164,124 @@
 
         </style>
         <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-        <script src="http://d3js.org/d3.v3.min.js" type="text/javascript"></script>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
         <script type="text/javascript" src="/script/questions.js"></script>
         <script type="text/javascript" src="/script/donut.js"></script>
         
+<!--        
+        
+        
+       
+        
+        <style>
+
+        .links line {
+          stroke: #999;
+          stroke-opacity: 0.6;
+        }
+
+        .nodes circle {
+          stroke: #ffffff;
+          stroke-width: -2px;
+        }
+        
+        .node.director { fill: #888; }
+        .node.movie { fill: #BBB; }
+
+        </style>
+    <svg width="960" height="600"></svg>
+<script>
+    debugger;
+    var svg = d3.select("svg"),
+        width = +svg.attr("width"),
+        height = +svg.attr("height");
+
+    var color = d3.scaleOrdinal(d3.schemeCategory20);
+    
+    var simulation = d3.forceSimulation().force("link", d3.forceLink().id(function(d) { return d.id; }).distance(30))
+                                            .force("charge", d3.forceManyBody())
+                                           .force("center", d3.forceCenter(width / 2, height / 2));
+    var dataNeo4j;
+    debugger;
+    $.ajax({
+                    type: "GET",
+                    url: "http://localhost:8080/graph/Pulp%20Fiction,The%20Dark%20Knight,Inception",
+                    success: function (data) {
+                                var graph = data;
+                                debugger;
+                                  var link = svg.append("g")
+                                      .attr("class", "links")
+                                    .selectAll("line")
+                                    .data(graph.links)
+                                    .enter().append("line")
+                                      .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
+                                  debugger;
+                                  var node = svg.append("g")
+                                      .attr("class", "nodes")
+                                    .selectAll("circle")
+                                    .data(graph.nodes)
+                                    .enter().append("circle")
+                                      .attr("r", 5)
+                                      .attr("fill", function(d) { return color(d.group); })
+                                      .call(d3.drag()
+                                          .on("start", dragstarted)
+                                          .on("drag", dragged)
+                                          .on("end", dragended));
+                                  debugger;
+                                  node.append("title")
+                                      .text(function(d) { return d.title; });
+                                  debugger;
+                                  simulation
+                                      .nodes(graph.nodes)
+                                      .on("tick", ticked);
+                                   debugger;   
+//                                  simulation.force("link")
+//                                      .links(graph.links);
+//                                  debugger;   
+                                  function ticked() {
+//                                    link
+//                                        .attr("x1", function(d) { return d.source.x; })
+//                                        .attr("y1", function(d) { return d.source.y; })
+//                                        .attr("x2", function(d) { return d.target.x; })
+//                                        .attr("y2", function(d) { return d.target.y; });
+
+                                    node
+                                        .attr("cx", function(d) { return d.x; })
+                                        .attr("cy", function(d) { return d.y; });
+                                  }
+                                  debugger;
+                                  function dragstarted(d) {
+                                  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+                                  d.fx = d.x;
+                                  d.fy = d.y;
+                                }
+                                 debugger;
+                                function dragged(d) {
+                                  d.fx = d3.event.x;
+                                  d.fy = d3.event.y;
+                                }
+                                debugger;
+                                function dragended(d) {
+                                  if (!d3.event.active) simulation.alphaTarget(0);
+                                  d.fx = null;
+                                  d.fy = null;
+                                }
+                                debugger;
+                        
+                    }
+                    
+    });
+    debugger;
+    document.getElementById("denemeSVG").innerHTML = svg;
+    debugger;
+</script>
+        
+        
+        
+        
+        
+        
+        -->
             
     </body>
 </html>
