@@ -107,7 +107,7 @@ public class MovieNeo4jController {
     List<Adjacency> global_adj_list;
     
     @RequestMapping(value="/recommendation/{title}", method = RequestMethod.GET)
-    public List<String> getRecommendation(@PathVariable("title") String title){
+    public Map<String, Object> getRecommendation(@PathVariable("title") String title){
         
         global_adj_list = new ArrayList();
         
@@ -123,14 +123,14 @@ public class MovieNeo4jController {
         for(Adjacency a : global_adj_list){
             if(i<3){
                 MovieNeo4jNode movie = movieNeo4jService.getByMovieId(a.getMovieId());
-                result.add(movie.getTitle()+"/"+a.getPoints()+" points\n");
+                result.add(movie.getTitle());
                 i++;
             }
             else
                 break;
         }
+        return this.graph(title, result.get(0), result.get(1), result.get(2));
         
-        return result;
         
     }
     
@@ -257,11 +257,12 @@ public class MovieNeo4jController {
     }    
     
     //D3
-    @RequestMapping("/graph/{title1},{title2},{title3}")
+    @RequestMapping("/graph/{title1},{title2},{title3},{title4}")
 	public Map<String, Object> graph(@PathVariable("title1") String title1,
                 @PathVariable("title2") String title2,
-                @PathVariable("title3") String title3) {
-		return movieNeo4jService.graph(10000,title1, title2,title3);
+                @PathVariable("title3") String title3,
+                @PathVariable("title4") String title4) {
+		return movieNeo4jService.graph(10000,title1, title2,title3,title4);
 	}
 }
 

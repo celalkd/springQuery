@@ -51,9 +51,10 @@ public interface MovieNeo4jRepository extends GraphRepository<MovieNeo4jNode>{
     @Query("MATCH (m:Movie {title:{title}})-[r]-(a) RETURN m,r,a LIMIT {limit}")
     MovieNeo4jNode fullGraph_2(@Param("limit") int limit, @Param("title") String title);
     
-    @Query("MATCH (m:Movie)-[r]-(a) WHERE m.title={title1} OR m.title={title2} OR m.title={title3} RETURN m,r,a LIMIT {limit}")
+    @Query("MATCH (m:Movie)-[r]-(a) WHERE m.title={title1} OR m.title={title2} OR m.title={title3} OR m.title={title4} RETURN m,r,a LIMIT {limit}")
     Collection<MovieNeo4jNode> fullGraph(@Param("limit") int limit,
                                 @Param("title1") String title1,
                                     @Param("title2") String title2,
-                                            @Param("title3") String title3);
+                                            @Param("title3") String title3,
+                                                @Param("title4") String title4);
 }

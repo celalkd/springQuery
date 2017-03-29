@@ -121,8 +121,8 @@ public class MovieNeo4jService {
 	
 
         @Transactional(readOnly = true)
-	public Map<String, Object>  graph(int limit, String title1,String title2,String title3) {
-		Collection<MovieNeo4jNode> result = movieRepo.fullGraph(limit, title1, title2,title3);
+	public Map<String, Object>  graph(int limit, String title1,String title2,String title3,String title4) {
+		Collection<MovieNeo4jNode> result = movieRepo.fullGraph(limit, title1, title2,title3,title4);
 		return toD3Format(result);
 	}
 }

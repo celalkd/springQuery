@@ -36,9 +36,10 @@ public class MongoController {
     public MovieMongoDB findByTitle(@RequestParam(value="title", defaultValue="Pulp Fiction") String title) {
        
         Query query = new Query();
-        title = WordUtils.capitalize(title);
+        //title = WordUtils.capitalize(title);
         query.addCriteria(Criteria.where("title").regex(title));
         MovieMongoDB movie = mongoOperation.findOne(query, MovieMongoDB.class);
+        
         
         return movie;
     }

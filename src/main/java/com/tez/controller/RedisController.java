@@ -42,7 +42,8 @@ public class RedisController {
         MongoController mongoController = new MongoController();
         
         MovieMongoDB movie = mongoController.findByTitle(title);
-        Integer movieID = new Integer(movie.id);
+        Integer movieID = movie.id;
+        // Integer movieID = new Integer(movie.id);
         String key = movieID.toString();
         
         List<Word> wordFreqList = new ArrayList<>();
@@ -53,6 +54,7 @@ public class RedisController {
             String data = redisTemplate.opsForList().index(key, row);
             Word word = splitData(data);
             wordFreqList.add(word);
+            System.out.println(word.str);
         }
         
         return wordFreqList;
