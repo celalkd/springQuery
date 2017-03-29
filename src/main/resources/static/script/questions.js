@@ -491,6 +491,7 @@
         success: function (graph) {
             debugger;
             force.nodes(graph.nodes).links(graph.links).start();
+            
 
             var link = svg.selectAll(".link")
                     .data(graph.links).enter()

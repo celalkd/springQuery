@@ -33,14 +33,14 @@
                                                             width: 100%;
                                                             box-sizing: border-box;
                                                             margin-top: 0.75%"
-                                                    value='Find movies directed by "Quentin Tarantino";rated minimum "9";starring "Uma Thurman, John Travolta";in genre "Crime, Drama";published between "1990-2000"'
+                                                    value='Who is the director of "The Godfather Part II", what is the rating, genre and year of the movie? Also give the cast, plot, tags and recommendations.'
 
                                                     placeholder="Ask your questions about a movie or search for a movie by keywords"
                                                     class="form-control"
                                                     name="search"
                                                  />
                                             </div>
-                                <!--                                                    Who is the director of "The Godfather Part II", what is the rating, genre and year of the movie? Also give the cast, plot, tags and recommendations.-->
+                                <!-- Find movies directed by "Quentin Tarantino";rated minimum "9";starring "Uma Thurman, John Travolta";in genre "Crime, Drama";published between "1990-2000"-->
                             </li>
                         </ul>
                     </div>
@@ -73,7 +73,7 @@
                             </a>
                     </div>
                     <div class="panel-heading">&nbsp;Search Results</div>
-                    <table id="results" class="table table-striped table-hover">
+                    <table id="results" class="table table-striped table-hover" style="overflow-y: scroll; height:428px;">
                         <thead>
                         <tr>
                             
@@ -83,7 +83,7 @@
                 </div>
                 <br>
                 <br>
-                <div class="panel panel-default" id="mongoPlotPanel" style = "display:none" >
+                <div class="panel panel-default" id="mongoPlotPanel" style="overflow-y: scroll; height:491px;display:none" >
                     <div class="logo-well">
                             <a>
                                 <img src="img/mongodb.svg">
@@ -143,7 +143,8 @@
         </div>
         <div class="row">
 <!--            <div class="col-md-12">-->
-                <div class="col-md-8">
+                <br><br>
+                <div class="col-md-6">
                     <div class="panel panel-default" id="neo4jPanel" style="display:none">
                         <div class="logo-well">
                                 <a>
@@ -174,11 +175,13 @@
                             </thead>
 
                         </table>
-                        <div id="graphDiv" style="height:600px;display: block;margin-left: auto; margin-right: auto"></div>
+                        <div id="graphDiv" style="height:510px;display: block;margin-left: -30%; margin-right: auto">
+<!--                            <svg id="graphDiv" style="height:500px;width: 600px;display: block;margin-left: -50%;"></svg>-->
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="panel panel-default" id="neo4jPanel_titles" style="height:643px;display:none">
+                <div class="col-md-6">
+                    <div class="panel panel-default" id="neo4jPanel_titles" style="height:553px;display:none">
                         <div class="logo-well">
                                 <a>
                                     <img src="img/neo4j.svg">
