@@ -61,7 +61,8 @@ public class MongoController {
                                     @RequestParam(value="yearMax", required=false) Integer yearMax,
                                     @RequestParam(value="genre", required=false) List<String> genre,
                                     @RequestParam(value="starring", required=false) List<String> starring,
-                                    @RequestParam(value="titleRegex", required=false) String titleRegex)
+                                    @RequestParam(value="titleRegex", required=false) String titleRegex,
+                                    @RequestParam(value="notstarring", required=false) List<String> notstarring)
 
     {
         Criteria criteria = new Criteria();
@@ -91,6 +92,12 @@ public class MongoController {
                 star = WordUtils.capitalize(star);
             }
             criterias.add(Criteria.where("starring").all(starring));
+        }
+        if(notstarring!=null){
+            for(String star : notstarring){
+                star = WordUtils.capitalize(star);
+            }
+            criterias.add(Criteria.where("starring").nin(notstarring));
         }
        
         if(genre!=null){

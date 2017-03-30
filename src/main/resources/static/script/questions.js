@@ -34,6 +34,7 @@
         $("table#plot tbody").empty();
         $("#doughnutChart").empty();
         $("#graphDiv").empty();
+        $("#resembleMovies").empty();
     }
         
     function anyQuery(){
@@ -62,7 +63,7 @@
     }
     function searchRedisKeywords(){
         
-        
+        $("#mongoTagsPanel").css("height", "");
         
         var input = $("#question").val();
          
@@ -86,7 +87,9 @@
     }
     
     function searchTags() {
-    
+        
+        $("#mongoTagsPanel").css("height", "471px");
+        
         var input = $("#question").val();
         var list = input.split(/[\s|?|,|.]+/);  
         var titleForUrl = input.match(/"([^"]+)"/)[1];
@@ -113,13 +116,12 @@
                 isPlot= true;
             if(list[i]==='recommendations'){
                 isRecommendation= true;
-                debugger;
             }
         }
         
         
         var url_mongo = "http://localhost:8080/find/byTitle?title=" + titleForUrl;   
-        debugger;
+        
             $.ajax({type: "GET",
                     url: url_mongo,
                     asycn: false,
@@ -164,28 +166,30 @@
     }
     function searchMovies(){
         
+        $("#mongoTagsPanel").css("height", "");
+        
         var directorValue;
         var ratingValue;
         
         var question="";
         
         var input = $("#question").val();
-        var list = input.split("Find movies ");
+        var list = input.split("Find movies");
         var input = list[1];
-        list = input.split(/[;|.]+/);
+        list = input.split(/[,|.]+/);
         for(var colon in list){
             var list2 = list[colon].split('"');
             switch(list2[0]){
-                case "directed by ":
+                case " directed by ":
                     directorValue = list2[1];
                     question = question+"director="+directorValue+"&";
                     break;
-                case "rated minimum ":
+                case " rated minimum ":
                     ratingValue = list2[1];
                     question = question+"rating="+ratingValue+"&";
                     break;
-                case "starring ":
-                    var list3 = list2[1].split(", ");
+                case " starring ":
+                    var list3 = list2[1].split("/");
                     question = question+"starring=";
                     
                     var lastIndex = list3.length-1;
@@ -200,47 +204,62 @@
                     }
                     
                     break;
-                case "in genre ":
-                    var list4 = list2[1].split(", ");
-                    question = question+"genre=";
-                    
-                    var lastIndex = list4.length-1;
-                    var i=0;
-                    while(i<=lastIndex){
-                        if(i===lastIndex){
-                            question = question+list4[i]+"&";
-                        }
-                        else
-                            question = question+list4[i]+",";
+                case " not starring ":
+                    var list3 = list2[1].split("/");
+                    question = question + "notstarring=";
+
+                    var lastIndex = list3.length - 1;
+                    var i = 0;
+                    while (i <= lastIndex) {
+                        if (i === lastIndex) {
+                            question = question + list3[i] + "&";
+                        } else
+                            question = question + list3[i] + ",";
                         i++;
                     }
                     break;
-                case "published in ":
+                
+                case " in genre of ":
+                    var list3 = list2[1].split("/");
+                    question = question+"genre=";
+                    
+                    var lastIndex = list3.length-1;
+                    var i=0;
+                    while(i<=lastIndex){
+                        if(i===lastIndex){
+                            question = question+list3[i]+"&";
+                        }
+                        else
+                            question = question+list3[i]+",";
+                        i++;
+                    }
+                    break;
+                case " published in ":
                     question = question+"yearMin="+list2[1]+"&"+"yearMax="+list2[1]+"&";
                     break;
-                case "published after ":
+                case " published after ":
                     question = question+"yearMin="+list2[1]+"&";
                     break;
-                case "published before ":
+                case " published before ":
                     question = question+"yearMax="+list2[1]+"&";
                     break;    
-                case "published between ":
-                    var list4 = list2[1].split("-");
-                    question = question+"yearMin="+list4[0]+"&";
-                    question = question+"yearMax="+list4[1]+"&";
+                case " published between ":
+                    var list3 = list2[1].split("-");
+                    question = question+"yearMin="+list3[0]+"&";
+                    question = question+"yearMax="+list3[1]+"&";
                     break;   
                 
             }
             
         }
         var url_mongo = "http://localhost:8080/find/byTags?" + question;   
-        debugger;
+        
         append_all_th();
         $.ajax({type: "GET",
                     url: url_mongo,
                     asycn: false,
                     success:function(data){
-                        debugger;
+                        
 //                        isTags = true;
 //                        $('#plot_res').removeClass('col-md-6').addClass('col-md-12');
                         var x = 0;
@@ -248,11 +267,11 @@
                             append_all_body(data[x],x);
                             x++;
                         }
-                        debugger;
+                        
                     }
                 });
            
-        debugger;
+        
     }
     
     function append_all_th(){
@@ -263,7 +282,6 @@
         $("<th>Genre</th>").appendTo(t);
         $("<th>Starring</th>").appendTo(t);
         $("<th>Rating</th>").appendTo(t);
-        debugger;
     }
     function append_all_body(movie, index){
         
@@ -276,7 +294,6 @@
         
         element_id="tr"+index;
         $('<tr id="'+element_id+'"> </tr>').appendTo(t_body);
-        debugger;
        
         
         var tr = $("#"+element_id);
@@ -365,9 +382,7 @@
         starringList.forEach(function (genre) {$("<li>" + genre + "</li>").appendTo(tdStarring);});
     }
     function appendFrequentTerms(data){
-            debugger;
             var url_redis = "http://localhost:8080/find/tags?title=" + data.title;
-            debugger;
             $.ajax({type: "GET",
                     url: url_redis ,
                     success:function(tags){                             
@@ -399,7 +414,6 @@
         
         var t = $("table#plot tbody").empty();
         $("<tr><td>"+movie.plot+"</td></tr>").appendTo(t);
-        debugger;
         
     }
     function appendDonutChart(id){
@@ -412,7 +426,6 @@
             if(rating!==""){
                 ratingFloat = parseFloat(rating);
                 negative = Math.round((10-ratingFloat)*100)/100;
-                debugger;
             }
             
         
@@ -484,7 +497,7 @@
     var svg = d3.select("#graphDiv").append("svg")
             .attr("width", "100%").attr("height", "100%")
             .attr("pointer-events", "all");
-    debugger;
+    
     $.ajax({
         type: "GET",
         url: "http://localhost:8080/recommendation/"+movie.title,
@@ -492,7 +505,24 @@
             debugger;
             force.nodes(graph.nodes).links(graph.links).start();
             
-
+            var td_source = $("#sourceMovie");
+            var td_resemble = $("#resembleMovies");
+            debugger;
+            for(var x in graph.nodes){
+                var l = graph.nodes[x].label;
+                if(l==="Movie"){
+                    debugger;
+                    if(graph.nodes[x].title===movie.title){
+                        debugger;
+                        td_source.text(graph.nodes[x].title);
+                    }
+                    else {
+                        $("<li>" + graph.nodes[x].title + "</li>").appendTo(td_resemble);
+                    }
+                }
+                
+            }
+            debugger;
             var link = svg.selectAll(".link")
                     .data(graph.links).enter()
                     .append("line").attr("class", "link");

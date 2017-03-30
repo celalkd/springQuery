@@ -54,7 +54,6 @@ public class RedisController {
             String data = redisTemplate.opsForList().index(key, row);
             Word word = splitData(data);
             wordFreqList.add(word);
-            System.out.println(word.str);
         }
         
         return wordFreqList;
