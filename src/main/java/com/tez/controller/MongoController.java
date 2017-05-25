@@ -40,6 +40,22 @@ public class MongoController {
         query.addCriteria(Criteria.where("title").regex(title));
         MovieMongoDB movie = mongoOperation.findOne(query, MovieMongoDB.class);
         
+        if(movie == null ){
+            query = new Query();
+            query.addCriteria(Criteria.where("başlık").regex(title));
+            movie = mongoOperation.findOne(query, MovieMongoDB.class);
+        }
+        
+        return movie;
+    }
+    @RequestMapping("/find/byTitle/tr")
+    public MovieMongoDB findByTitle_TR(@RequestParam(value="title", defaultValue="Ucuz Roman") String title) {
+       
+        Query query = new Query();
+        //title = WordUtils.capitalize(title);
+        query.addCriteria(Criteria.where("başlık").regex(title));
+        MovieMongoDB movie = mongoOperation.findOne(query, MovieMongoDB.class);
+        
         
         return movie;
     }
@@ -62,7 +78,9 @@ public class MongoController {
                                     @RequestParam(value="genre", required=false) List<String> genre,
                                     @RequestParam(value="starring", required=false) List<String> starring,
                                     @RequestParam(value="titleRegex", required=false) String titleRegex,
-                                    @RequestParam(value="notstarring", required=false) List<String> notstarring)
+                                    @RequestParam(value="notstarring", required=false) List<String> notstarring,
+                                     @RequestParam(value="notgenre", required=false) List<String> notgenre,
+                                     @RequestParam(value="notdirector", required=false) String notdirector)
 
     {
         Criteria criteria = new Criteria();
@@ -75,6 +93,10 @@ public class MongoController {
         if(director!=null){
             director = WordUtils.capitalize(director);
             criterias.add(Criteria.where("director").is(director));
+        }
+        if (notdirector != null) {
+            notdirector = WordUtils.capitalize(notdirector);
+            criterias.add(Criteria.where("director").ne(notdirector));
         }
         
         if(yearMin!=null && yearMax!=null)
@@ -105,6 +127,12 @@ public class MongoController {
                 gen = WordUtils.capitalize(gen);
             }
             criterias.add(Criteria.where("genre").all(genre));
+        }
+        if(notgenre!=null){
+            for(String gen : notgenre){
+                gen = WordUtils.capitalize(gen);
+            }
+            criterias.add(Criteria.where("genre").nin(notgenre));
         }
         
         

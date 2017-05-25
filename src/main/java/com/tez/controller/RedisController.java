@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RedisController {
     
+    final static int archiveSize = 30;
+    
     ApplicationContext ctx ;
     RedisTemplate< String, String > redisTemplate;
     
@@ -43,6 +45,29 @@ public class RedisController {
         
         MovieMongoDB movie = mongoController.findByTitle(title);
         Integer movieID = movie.id;
+        // Integer movieID = new Integer(movie.id);
+        String key = movieID.toString();
+        
+        List<Word> wordFreqList = new ArrayList<>();
+        
+        int rowSize = getLastIndex(redisTemplate, key);
+        
+        for(int row=0; row<rowSize; row++){
+            String data = redisTemplate.opsForList().index(key, row);
+            Word word = splitData(data);
+            wordFreqList.add(word);
+        }
+        
+        return wordFreqList;
+    }
+    
+    @RequestMapping("find/tags/tr")
+    public List<Word> freqList_TR(@RequestParam(value="title", defaultValue = "Pulp Fiction", required = true) String title){
+        MongoController mongoController = new MongoController();
+        
+        MovieMongoDB movie = mongoController.findByTitle(title);
+        Integer movieID = movie.id+archiveSize;
+        System.out.println(movieID);
         // Integer movieID = new Integer(movie.id);
         String key = movieID.toString();
         
@@ -123,8 +148,19 @@ public class RedisController {
         
         for(String idStr : keyList){
             Integer idInt = Integer.parseInt(idStr);
+            if(idInt>=archiveSize)
+                idInt-=archiveSize;
             MovieMongoDB m = new MongoController().findById(idInt);
-            movies.add(m);
+            
+            boolean found = false;
+            for(MovieMongoDB movie : movies){                
+                if(movie.id==idInt){
+                    found =true;
+                    break;
+                }
+            }
+            if(!found)
+                movies.add(m);
         }
         
         return movies;        
